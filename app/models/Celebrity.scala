@@ -2,8 +2,8 @@ package models
 
 import models.Name.NameBSONReader
 import play.api.libs.json.Json
-import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter, BSONObjectID, BSONObjectIDIdentity, BSONStringHandler}
 import reactivemongo.bson.Producer.nameValue2Producer
+import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter, BSONObjectID, BSONObjectIDIdentity, BSONStringHandler}
 
 /*
  * Author: Sari Haj Hussein
