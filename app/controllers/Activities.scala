@@ -24,22 +24,21 @@ object Activities extends Controller with MongoController {
    * list all activities
    * @return collection of activities
    */
-  def all = Action { implicit request =>
-    Async {
-      // let's do our query
-      val cursor: Cursor[Activity] = collection.
-        // find all
-        find(BSONDocument()).
-        // sort by name
-        sort(BSONDocument("name" -> 1)).
-        // perform the query and get a cursor of JsObject
-        cursor[Activity]
+  def all = Action.async { implicit request =>
+
+    // let's do our query
+    val cursor: Cursor[Activity] = collection.
+      // find all
+      find(BSONDocument()).
+      // sort by name
+      sort(BSONDocument("name" -> 1)).
+      // perform the query and get a cursor of JsObject
+      cursor[Activity]
 
 
-      val futureActivities: Future[List[Activity]] = cursor.collect[List]()
-      futureActivities.map { activities => Ok(Json.toJson(activities)) } // convert it to a JSON and return it
+    val futureActivities: Future[List[Activity]] = cursor.collect[List]()
+    futureActivities.map { activities => Ok(Json.toJson(activities))} // convert it to a JSON and return it
 
-    }
   }
 
   /**
@@ -47,27 +46,19 @@ object Activities extends Controller with MongoController {
    * @param name beginning of the name (non sensitive case)
    * @return collection of activities
    */
-  def find(name: String) = Action(parse.empty) { request =>
-    Async {
-//      val query =
-//        BSONDocument("name" ->  BSONRegex("^" + name + ".*", "i"))
-//      val cursor = collection.find(
-//        query).sort(BSONDocument("name" -> 1)).cursor[Activity] // get all the fields of all the celebrities
-//      val futureList = cursor.toList // convert it to a list of Celebrity
-//      futureList.map { activities => Ok(Json.toJson(activities)) } // convert it to a JSON and return it
+  def find(name: String) = Action.async(parse.empty) { request =>
+    val query =
+      BSONDocument("name" -> BSONRegex("^" + name + ".*", "i"))
+    val cursor: Cursor[Activity] = collection.find(query).
+      // sort by name
+      sort(BSONDocument("name" -> 1)).
+      // perform the query and get a cursor of JsObject
+      cursor[Activity]
 
-     val query =
-              BSONDocument("name" ->  BSONRegex("^" + name + ".*", "i"))
-      val cursor: Cursor[Activity] = collection.find(query).
-        // sort by name
-        sort(BSONDocument("name" -> 1)).
-        // perform the query and get a cursor of JsObject
-        cursor[Activity]
+    val futureActivities: Future[List[Activity]] = cursor.collect[List]()
+    futureActivities.map { activities => Ok(Json.toJson(activities))} // convert it to a JSON and return it
 
-      val futureActivities: Future[List[Activity]] = cursor.collect[List]()
-      futureActivities.map { activities => Ok(Json.toJson(activities)) } // convert it to a JSON and return it
 
-    }
   }
 
   /**
@@ -75,13 +66,11 @@ object Activities extends Controller with MongoController {
    * @param id the Json Id
    * @return
    */
-  def show(id: String) = Action(parse.empty) { request =>
-    Async {
-      val objectID = new BSONObjectID(id) // get the corresponding BSONObjectID
-      // get the celebrity having this id (there will be 0 or 1 result)
-      val futureCelebrity = collection.find(BSONDocument("_id" -> objectID)).one[Activity]
-      futureCelebrity.map { celebrity => Ok(Json.toJson(celebrity)) }
-    }
+  def show(id: String) = Action.async(parse.empty) { request =>
+    val objectID = new BSONObjectID(id) // get the corresponding BSONObjectID
+  // get the celebrity having this id (there will be 0 or 1 result)
+  val futureCelebrity = collection.find(BSONDocument("_id" -> objectID)).one[Activity]
+    futureCelebrity.map { celebrity => Ok(Json.toJson(celebrity))}
   }
 
 }
