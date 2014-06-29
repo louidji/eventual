@@ -1,31 +1,38 @@
 package controllers
 
 import models.Celebrity
-import models.Celebrity.{CelebrityBSONReader, CelebrityBSONWriter, celebrityFormat}
 import models.Name.nameFormat
-import play.api.libs.json.Json
-import play.api.mvc.{Action, Controller}
+
 import play.modules.reactivemongo.MongoController
+import play.modules.reactivemongo.json.collection.JSONCollection
+import scala.concurrent.Future
+import reactivemongo.api.Cursor
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.mvc._
+import play.api.libs.json._
 import reactivemongo.api.collections.default.BSONCollection
-import reactivemongo.bson.Producer.nameValue2Producer
-import reactivemongo.bson._
+import reactivemongo.bson.{BSONObjectID, BSONRegex, BSONDocument}
 
 /*
  * Author: Sari Haj Hussein
  */
 
 object Celebrities extends Controller with MongoController {
-  val collection = db[BSONCollection]("celebrities")
+  val collection: BSONCollection = db[BSONCollection]("celebrities")
 
   /** list all celebrities */
   def index = Action { implicit request =>
     Async {
-      val cursor = collection.find(
-        BSONDocument(), BSONDocument()).cursor[Celebrity] // get all the fields of all the celebrities
-      val futureList = cursor.toList // convert it to a list of Celebrity
+//      val cursor = collection.find(
+//        BSONDocument(), BSONDocument()).cursor[Celebrity] // get all the fields of all the celebrities
+//      val futureList = cursor.toList // convert it to a list of Celebrity
+//
+//      futureList.map { celebrities => Ok(Json.toJson(celebrities)) } // convert it to a JSON and return it
+          val cursor = collection.find(BSONDocument()).cursor[Celebrity] // get all the fields of all the celebrities
+          val futureList: Future[List[Celebrity]] = cursor.collect[List]() // convert it to a list of Celebrity
 
-      futureList.map { celebrities => Ok(Json.toJson(celebrities)) } // convert it to a JSON and return it
-    }
+          futureList.map { celebrities => Ok(Json.toJson(celebrities)) } // convert it to a JSON and return it
+        }
   }
   
   /** create a celebrity from the given JSON */
@@ -49,7 +56,7 @@ object Celebrities extends Controller with MongoController {
           BSONDocument("name.last" ->  BSONRegex("^" + name + ".*", "i"))
         val cursor = collection.find(
           query).sort(BSONDocument("name" -> 1)).cursor[Celebrity] // get all the fields of all the celebrities
-        val futureList = cursor.toList // convert it to a list of Celebrity
+        val futureList: Future[List[Celebrity]] = cursor.collect[List]() // convert it to a list of Celebrity
         futureList.map { celebrities => Ok(Json.toJson(celebrities)) } // convert it to a JSON and return it
       }
   }
