@@ -30,14 +30,11 @@ var app = angular.module("app", ["ngResource"])
 	}
 ]);
 
-app.factory('CelebritiesData', function() {
-    //return {celebrities:""}
-    return [{"id":{"$oid":"53a06a7d36a975c08e18d378"},"name":{"first":"IngridXXX","last":"Bergman"},"website":"http://www.ingridbergman.com","bio":""}]
-});
-
 app.service('CelebritiesService', function() {
    var celebrities = [];
  });
+
+
 
 app.controller('MenuController', function(){
     this.tab = 1;
@@ -123,3 +120,14 @@ app.controller("EditCtrl", ["$scope", "$resource", "$routeParams", "$timeout", "
 		$timeout(function() { $scope.go('/'); }); // go back to public/html/main.html
 	};
 }]);
+
+
+/*
+TODO => Pb sur le routing ???
+app.directive('celebrities', function(){
+    return {
+        restrict: 'E',
+        templateUrl: 'directive/celebrities'
+    };
+});
+*/

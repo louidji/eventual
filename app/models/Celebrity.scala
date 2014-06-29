@@ -1,9 +1,19 @@
 package models
 
-import models.Name.NameBSONReader
 import play.api.libs.json.Json
+import models.Name.NameBSONReader
+//import models.Name.NameBSONWriter
+//import play.api.libs.functional.syntax.functionalCanBuildApplicative
+//import play.api.libs.functional.syntax.toFunctionalBuilderOps
+import reactivemongo.bson.BSONDocument
+import reactivemongo.bson.BSONDocumentReader
+import reactivemongo.bson.BSONDocumentWriter
+import reactivemongo.bson.BSONObjectID
+import reactivemongo.bson.BSONObjectIDIdentity
+import reactivemongo.bson.BSONStringHandler
 import reactivemongo.bson.Producer.nameValue2Producer
-import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter, BSONObjectID, BSONObjectIDIdentity, BSONStringHandler}
+// necessaire (implict ... Json.format)
+import play.modules.reactivemongo.json.BSONFormats.BSONObjectIDFormat
 
 /*
  * Author: Sari Haj Hussein
