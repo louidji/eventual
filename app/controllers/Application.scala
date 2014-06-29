@@ -10,7 +10,8 @@ import play.api.mvc.{Action, Controller}
  */
 
 object Application extends Controller {
-  
+
+  lazy val projectRoot = Play.application().path()
   /** serve the index page app/views/index.scala.html */
   def index(any: String) = Action {
     Ok(views.html.index())
@@ -19,15 +20,15 @@ object Application extends Controller {
   /** resolve "any" into the corresponding HTML page URI */
   def getURI(any: String): String = any match {
     case "main" => "/public/html/main.html"
-    case "detail" => "/public/html/detail.html"
+    case "detail" => "/public/html/celebrities.html"
     case "search" => "/public/html/search.html"
+    case "directive/celebrities" => "/public/directive/celebrities.html"
     case _ => "error"
   }
   
   /** load an HTML page from public/html */
   def loadPublicHTML(any: String) = Action {
-    val projectRoot = Play.application().path()
-    var file = new File(projectRoot + getURI(any))
+    val file = new File(projectRoot + getURI(any))
     if (file.exists())
       Ok(scala.io.Source.fromFile(file.getCanonicalPath()).mkString).as("text/html");
     else
