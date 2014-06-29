@@ -18,6 +18,10 @@ DELETE  /api/celebrities/:id		controllers.Celebrities.delete(id: String)
 GET     /api/celebrities/find/:name		controllers.Celebrities.find(name: String)
 
 
+GET     /api/activities            controllers.Activities.all
+GET     /api/activities/find/:name		controllers.Activities.find(name: String)
+
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
