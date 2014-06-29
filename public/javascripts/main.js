@@ -122,12 +122,9 @@ app.controller("EditCtrl", ["$scope", "$resource", "$routeParams", "$timeout", "
 }]);
 
 
-/*
-TODO => Pb sur le routing ???
 app.directive('celebrities', function(){
     return {
         restrict: 'E',
-        templateUrl: 'directive/celebrities'
+        templateUrl: 'directives/celebrities'
     };
 });
-*/

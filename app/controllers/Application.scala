@@ -20,10 +20,14 @@ object Application extends Controller {
   /** resolve "any" into the corresponding HTML page URI */
   def getURI(any: String): String = any match {
     case "main" => "/public/html/main.html"
-    case "detail" => "/public/html/celebrities.html"
+    case "detail" => "/public/html/detail.html"
     case "search" => "/public/html/search.html"
-    case "directive/celebrities" => "/public/directive/celebrities.html"
     case _ => "error"
+  }
+
+  /** resolve "any" into the corresponding HTML page URI */
+  def getURIDirective(any: String): String = {
+      "/public/directives/" + any +".html"
   }
   
   /** load an HTML page from public/html */
@@ -34,4 +38,15 @@ object Application extends Controller {
     else
       NotFound
   }
+
+  /** load an HTML directives page from public/directives */
+  def loadPublicDirectives(any: String) = Action {
+    val file = new File(projectRoot + getURIDirective(any))
+    if (file.exists())
+      Ok(scala.io.Source.fromFile(file.getCanonicalPath()).mkString).as("text/html");
+    else
+      NotFound
+  }
 }
+
+
