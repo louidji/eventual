@@ -1,6 +1,8 @@
 package controllers
 
 import models.Celebrity
+import services.CelebritiesDAO
+
 import models.Name.nameFormat
 
 import play.modules.reactivemongo.MongoController
@@ -18,20 +20,12 @@ import reactivemongo.bson.{BSONObjectID, BSONRegex, BSONDocument}
  */
 
 object Celebrities extends Controller with MongoController {
-  val collection: BSONCollection = db[BSONCollection]("celebrities")
+
 
   /** list all celebrities */
   def index = Action.async { implicit request =>
 
-    //      val cursor = collection.find(
-    //        BSONDocument(), BSONDocument()).cursor[Celebrity] // get all the fields of all the celebrities
-    //      val futureList = cursor.toList // convert it to a list of Celebrity
-    //
-    //      futureList.map { celebrities => Ok(Json.toJson(celebrities)) } // convert it to a JSON and return it
-    val cursor = collection.find(BSONDocument()).cursor[Celebrity] // get all the fields of all the celebrities
-  val futureList: Future[List[Celebrity]] = cursor.collect[List]() // convert it to a list of Celebrity
-
-    futureList.map { celebrities => Ok(Json.toJson(celebrities))} // convert it to a JSON and return it
+    CelebritiesDAO.all.map { celebrities => Ok(Json.toJson(celebrities))} // convert it to a JSON and return it
 
   }
 
@@ -43,27 +37,18 @@ object Celebrities extends Controller with MongoController {
     val website = request.body.\("website").toString().replace("\"", "")
     val bio = request.body.\("bio").toString().replace("\"", "")
     val celebrity = Celebrity(Option(BSONObjectID.generate), name, website, bio) // create the celebrity
-    collection.insert(celebrity).map(
+    CelebritiesDAO.create(celebrity).map(
       _ => Ok(Json.toJson(celebrity))) // return the created celebrity in a JSON
 
   }
 
   def find(name: String) = Action.async(parse.empty) { request =>
-
-    val query = BSONDocument("name.last" -> BSONRegex("^" + name + ".*", "i"))
-    val cursor = collection.find(query).sort(BSONDocument("name" -> 1)).cursor[Celebrity] // get all the fields of all the celebrities
-  val futureList: Future[List[Celebrity]] = cursor.collect[List]() // convert it to a list of Celebrity
-    futureList.map { celebrities => Ok(Json.toJson(celebrities))} // convert it to a JSON and return it
-
+    CelebritiesDAO.find(name).map { celebrities => Ok(Json.toJson(celebrities))} // convert it to a JSON and return it
   }
 
   /** retrieve the celebrity for the given id as JSON */
   def show(id: String) = Action.async(parse.empty) { request =>
-
-    val objectID = new BSONObjectID(id) // get the corresponding BSONObjectID
-  // get the celebrity having this id (there will be 0 or 1 result)
-  val futureCelebrity = collection.find(BSONDocument("_id" -> objectID)).one[Celebrity]
-    futureCelebrity.map { celebrity => Ok(Json.toJson(celebrity))}
+    CelebritiesDAO.show(id).map { celebrity => Ok(Json.toJson(celebrity))}
   }
 
   /** update the celebrity for the given id from the JSON body */
@@ -74,22 +59,17 @@ object Celebrities extends Controller with MongoController {
     val name = nameFormat.reads(nameJSON).get
     val website = request.body.\("website").toString().replace("\"", "")
     val bio = request.body.\("bio").toString().replace("\"", "")
-    val modifier = BSONDocument(// create the modifier celebrity
-      "$set" -> BSONDocument(
-        "name" -> name,
-        "website" -> website,
-        "bio" -> bio))
-    collection.update(BSONDocument("_id" -> objectID), modifier).map(
-      _ => Ok(Json.toJson(Celebrity(Option(objectID), name, website, bio)))) // return the modified celebrity in a JSON
+
+    val celebrity = new Celebrity(Option(objectID), name, website, bio)
+    CelebritiesDAO.update(celebrity).map(
+      _ => Ok(Json.toJson(Celebrity(Option(objectID), name, website, bio))))
 
   }
 
   /** delete a celebrity for the given id */
   def delete(id: String) = Action.async(parse.empty) { request =>
-
-    val objectID = new BSONObjectID(id) // get the corresponding BSONObjectID
-    collection.remove(BSONDocument("_id" -> objectID)).map(// remove the celebrity
-      _ => Ok(Json.obj())).recover { case _ => InternalServerError} // and return an empty JSON while recovering from errors if any
+    CelebritiesDAO.delete(id).map(// remove the celebrity
+      _ => Ok(Json.obj())).recover { case _ => InternalServerError}
 
   }
 }
