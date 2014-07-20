@@ -1,0 +1,14 @@
+language: scala
+
+scala:
+  - 2.11.0
+
+services:
+  - mongodb
+
+script:
+  - export SBT_OPTS="-XX:+CMSClassUnloadingEnabled -XX:PermSize=256M -XX:MaxPermSize=512M"
+  - sbt clean test
+
+after_script:
+
