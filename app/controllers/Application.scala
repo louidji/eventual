@@ -17,36 +17,24 @@ object Application extends Controller {
     Ok(views.html.index())
   }
   
-  /** resolve "any" into the corresponding HTML page URI */
-  def getURI(any: String): String = any match {
-    case "main" => "/public/html/main.html"
-    case "detail" => "/public/html/detail.html"
-    case "search" => "/public/html/search.html"
-    case _ => "error"
-  }
+//  /** resolve "any" into the corresponding HTML page URI */
+//  def getURI(any: String): String = any match {
+//    case "main" => "/public/html/main.html"
+//    case "detail" => "/public/html/detail.html"
+//    case "search" => "/public/html/search.html"
+//    case _ => "error"
+//  }
+//
+//
+//  /** load an HTML page from public/html */
+//  def loadPublicHTML(any: String) = Action {
+//    val file = new File(projectRoot + getURI(any))
+//    if (file.exists())
+//      Ok(scala.io.Source.fromFile(file.getCanonicalPath()).mkString).as("text/html");
+//    else
+//      NotFound
+//  }
 
-  /** resolve "any" into the corresponding HTML page URI */
-  def getURIDirective(any: String): String = {
-      "/public/directives/" + any +".html"
-  }
-  
-  /** load an HTML page from public/html */
-  def loadPublicHTML(any: String) = Action {
-    val file = new File(projectRoot + getURI(any))
-    if (file.exists())
-      Ok(scala.io.Source.fromFile(file.getCanonicalPath()).mkString).as("text/html");
-    else
-      NotFound
-  }
-
-  /** load an HTML directives page from public/directives */
-  def loadPublicDirectives(any: String) = Action {
-    val file = new File(projectRoot + getURIDirective(any))
-    if (file.exists())
-      Ok(scala.io.Source.fromFile(file.getCanonicalPath()).mkString).as("text/html");
-    else
-      NotFound
-  }
 }
 
 

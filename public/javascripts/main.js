@@ -5,20 +5,19 @@ var app = angular.module("app", ["ngResource"])
 	.constant("apiUrl", "http://localhost:9000\:9000/api") // to tell AngularJS that 9000 is not a dynamic parameter
 	.config(["$routeProvider", function($routeProvider) {
 		return $routeProvider.when("/", {
-			templateUrl: "/views/main",
+			templateUrl: "/assets/html/main.html",
 			controller: "ListCtrl"
 		}).when("/result", {
-                templateUrl: "/views/main",
+                templateUrl: "/assets/html/main.html",
                 controller: "ListResult"
-            })
-         .when("/create", {
-			templateUrl: "/views/detail",
+        }).when("/create", {
+			templateUrl: "/assets/html/detail.html",
 			controller: "CreateCtrl"
 	    }).when("/search", {
-            templateUrl: "/views/search",
+            templateUrl: "/assets/html/search.html",
             controller: "SearchCtrl"
          }).when("/edit/:id", {
-			templateUrl: "/views/detail",
+			templateUrl: "/assets/html/detail.html",
 			controller: "EditCtrl"
 	    }).otherwise({
 			redirectTo: "/"
@@ -125,6 +124,6 @@ app.controller("EditCtrl", ["$scope", "$resource", "$routeParams", "$timeout", "
 app.directive('celebrities', function(){
     return {
         restrict: 'E',
-        templateUrl: 'directives/celebrities'
+        templateUrl: 'assets/directives/celebrities.html'
     };
 });
