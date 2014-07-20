@@ -1,11 +1,8 @@
 package controllers
 
-import play.modules.reactivemongo.MongoController
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.mvc._
 import play.api.libs.json._
-import reactivemongo.api.collections.default.BSONCollection
-import reactivemongo.bson.{BSONObjectID, BSONRegex, BSONDocument}
+import play.api.mvc._
 import services.ActivitiesDAO
 
 /**
@@ -13,8 +10,7 @@ import services.ActivitiesDAO
  * Date: 29/06/2014
  * Time: 17:47
  */
-object Activities extends Controller with MongoController {
-  val collection: BSONCollection = db[BSONCollection]("activities")
+object Activities extends Controller {
 
   /**
    * list all activities
@@ -41,7 +37,7 @@ object Activities extends Controller with MongoController {
    * @return
    */
   def show(id: String) = Action.async(parse.empty) { request =>
-    ActivitiesDAO.show(id).map { celebrity => Ok(Json.toJson(celebrity))}
+    ActivitiesDAO.show(id).map { activity => Ok(Json.toJson(activity))}
   }
 
 }

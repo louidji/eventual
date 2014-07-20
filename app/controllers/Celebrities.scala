@@ -1,25 +1,18 @@
 package controllers
 
 import models.Celebrity
-import services.CelebritiesDAO
-
 import models.Name.nameFormat
-
-import play.modules.reactivemongo.MongoController
-import play.modules.reactivemongo.json.collection.JSONCollection
-import scala.concurrent.Future
-import reactivemongo.api.Cursor
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.mvc._
 import play.api.libs.json._
-import reactivemongo.api.collections.default.BSONCollection
-import reactivemongo.bson.{BSONObjectID, BSONRegex, BSONDocument}
+import play.api.mvc._
+import reactivemongo.bson.BSONObjectID
+import services.CelebritiesDAO
 
 /*
  * Author: Sari Haj Hussein
  */
 
-object Celebrities extends Controller with MongoController {
+object Celebrities extends Controller {
 
 
   /** list all celebrities */
