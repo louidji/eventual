@@ -19,7 +19,7 @@ import play.modules.reactivemongo.json.BSONFormats.BSONObjectIDFormat
  * Author: Sari Haj Hussein
  */
 
-case class Celebrity(id: Option[BSONObjectID], name: Name, website: String, bio: String)
+case class Celebrity(id: Option[BSONObjectID], name: Name, website: String, bio: Option[String])
 
 object Celebrity {
   /** serialize/Deserialize a Celebrity into/from JSON value */
@@ -28,11 +28,17 @@ object Celebrity {
   /** serialize a Celebrity into a BSON */
   implicit object CelebrityBSONWriter extends BSONDocumentWriter[Celebrity] {
     def write(celebrity: Celebrity): BSONDocument =
-      BSONDocument(
-        "_id" -> celebrity.id.getOrElse(BSONObjectID.generate),
-        "name" -> celebrity.name,
-        "website" -> celebrity.website,
-        "bio" -> celebrity.bio)
+      if (celebrity.bio.isDefined)
+        BSONDocument(
+          "_id" -> celebrity.id.getOrElse(BSONObjectID.generate),
+          "name" -> celebrity.name,
+          "website" -> celebrity.website,
+          "bio" -> celebrity.bio.get)
+      else
+        BSONDocument(
+          "_id" -> celebrity.id.getOrElse(BSONObjectID.generate),
+          "name" -> celebrity.name,
+          "website" -> celebrity.website)
   }
 
   /** deserialize a Celebrity from a BSON */
@@ -42,6 +48,6 @@ object Celebrity {
         doc.getAs[BSONObjectID]("_id"),
         doc.getAs[Name]("name").get,
         doc.getAs[String]("website").get,
-        doc.getAs[String]("bio").get)
+        doc.getAs[String]("bio"))
   }
 }

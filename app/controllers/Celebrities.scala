@@ -28,7 +28,13 @@ object Celebrities extends Controller {
     val nameJSON = request.body.\("name")
     val name = nameFormat.reads(nameJSON).get
     val website = request.body.\("website").toString().replace("\"", "")
-    val bio = request.body.\("bio").toString().replace("\"", "")
+
+    val bio = (request.body \ "bio").asOpt[String].map { bio =>
+      if (!bio.trim.isEmpty) Option(bio.replace("\"", "")) else None
+    }.getOrElse {
+      None
+    }
+
     val celebrity = Celebrity(Option(BSONObjectID.generate), name, website, bio) // create the celebrity
     CelebritiesDAO.create(celebrity).map(
       _ => Ok(Json.toJson(celebrity))) // return the created celebrity in a JSON
@@ -51,7 +57,11 @@ object Celebrities extends Controller {
     val nameJSON = request.body.\("name")
     val name = nameFormat.reads(nameJSON).get
     val website = request.body.\("website").toString().replace("\"", "")
-    val bio = request.body.\("bio").toString().replace("\"", "")
+    val bio = (request.body \ "bio").asOpt[String].map { bio =>
+      if (!bio.trim.isEmpty) Option(bio.replace("\"", "")) else None
+    }.getOrElse {
+      None
+    }
 
     val celebrity = new Celebrity(Option(objectID), name, website, bio)
     CelebritiesDAO.update(celebrity).map(

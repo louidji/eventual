@@ -3,8 +3,7 @@ package services
 import models.Celebrity
 import play.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import reactivemongo.bson.{BSONDocument, BSONObjectID, BSONRegex}
-import reactivemongo.core.commands.LastError
+import reactivemongo.bson.{BSONDocument, BSONRegex}
 
 import scala.concurrent.Future
 
@@ -22,7 +21,6 @@ object CelebritiesDAO extends DataAccess[Celebrity] {
   }
 
 
-
   def find(name: String): Future[List[Celebrity]] = {
     if (conform(name)) {
       val query = BSONDocument("name.last" -> BSONRegex("^" + name + ".*", "i"))
@@ -38,12 +36,21 @@ object CelebritiesDAO extends DataAccess[Celebrity] {
 
   /** update the celebrity for the given id from the JSON body */
   def update(celebrity: Celebrity) = {
-    val modifier = BSONDocument(// create the modifier celebrity
-      "$set" -> BSONDocument(
-        "name" -> celebrity.name,
-        "website" -> celebrity.website,
-        "bio" -> celebrity.bio))
-    collection.update(BSONDocument("_id" -> celebrity.id.get.copy()), modifier)
+    val modifier = if (celebrity.bio.isDefined)
+      BSONDocument(// create the modifier celebrity
+        "$set" -> BSONDocument(
+          "name" -> celebrity.name,
+          "website" -> celebrity.website,
+          "bio" -> celebrity.bio))
+    else
+      BSONDocument(
+        "$set" -> BSONDocument(
+          "name" -> celebrity.name,
+          "website" -> celebrity.website),
+        "$unset" -> BSONDocument(
+          "bio" -> 1))
+
+    collection.update(BSONDocument("_id" -> celebrity.id.get), modifier)
   }
 
 
