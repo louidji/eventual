@@ -41,7 +41,7 @@ object Celebrities extends Controller {
 
   /** retrieve the celebrity for the given id as JSON */
   def show(id: String) = Action.async(parse.empty) { request =>
-    CelebritiesDAO.show(id).map { celebrity => Ok(Json.toJson(celebrity))}
+    CelebritiesDAO.findById(id).map { celebrity => Ok(Json.toJson(celebrity))}
   }
 
   /** update the celebrity for the given id from the JSON body */

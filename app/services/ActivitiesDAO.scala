@@ -1,12 +1,10 @@
 package services
 
 import models.Activity
-import play.api.Play.current
+import play.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.modules.reactivemongo.ReactiveMongoPlugin
 import reactivemongo.api.Cursor
-import reactivemongo.api.collections.default.BSONCollection
-import reactivemongo.bson.{BSONDocument, BSONObjectID, BSONRegex}
+import reactivemongo.bson.{BSONDocument, BSONRegex}
 
 import scala.concurrent.Future
 
@@ -15,9 +13,9 @@ import scala.concurrent.Future
  * Date: 29/06/2014
  * Time: 17:47
  */
-object ActivitiesDAO {
-  val collection: BSONCollection = ReactiveMongoPlugin.db.collection[BSONCollection]("activities")
-  val pattern = "\\w+".r
+object ActivitiesDAO extends DataAccess[Activity] {
+  val collectionName = "activities"
+
 
   /**
    * list all activities
@@ -43,31 +41,23 @@ object ActivitiesDAO {
    * @return collection of activities
    */
   def find(name: String): Future[List[Activity]] = {
-    pattern.findFirstIn(name) match {
-      case s: Some[String] => {
-        val query =
-          BSONDocument("name" -> BSONRegex("^" + s.get + ".*", "i"))
-        val cursor: Cursor[Activity] = collection.find(query).
-          // sort by name
-          sort(BSONDocument("name" -> 1)).
-          // perform the query and get a cursor of JsObject
-          cursor[Activity]
 
-        cursor.collect[List]()
-      }
-      case _ => Future(Nil)
+    if (conform(name)) {
+      val query =
+        BSONDocument("name" -> BSONRegex("^" + name + ".*", "i"))
+      val cursor: Cursor[Activity] = collection.find(query).
+        // sort by name
+        sort(BSONDocument("name" -> 1)).
+        // perform the query and get a cursor of JsObject
+        cursor[Activity]
+
+      cursor.collect[List]()
+    } else {
+      Logger.of("security").warn(s"Menace d'injection, la chaine '$name' contient des caractères non autorisés")
+      Future(Nil)
     }
-
-
   }
 
-  /**
-   * Retrieve the activity for the given id as JSON
-   * @param id the Json Id
-   * @return
-   */
-  def show(id: String) = {
-    collection.find(BSONDocument("_id" -> new BSONObjectID(id))).one[Activity]
-  }
+
 
 }

@@ -37,7 +37,7 @@ object Activities extends Controller {
    * @return
    */
   def show(id: String) = Action.async(parse.empty) { request =>
-    ActivitiesDAO.show(id).map { activity => Ok(Json.toJson(activity))}
+    ActivitiesDAO.findById(id).map { activity => Ok(Json.toJson(activity))}
   }
 
 }

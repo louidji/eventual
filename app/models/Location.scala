@@ -2,7 +2,7 @@ package models
 
 import play.api.libs.json.Json
 import reactivemongo.bson.Producer.nameValue2Producer
-import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
+import reactivemongo.bson.{BSONArray, BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
 /**
  * User: Louis TOURNAYRE
@@ -17,15 +17,19 @@ object Location {
   implicit object LocationBSONWriter extends BSONDocumentWriter[Location] {
     def write(loc: Location): BSONDocument =
       BSONDocument(
-        "lon" -> loc.longitude,
-        "lat" -> loc.latitude)
+        "type" -> "Point",
+        "coordinates" -> BSONArray(loc.longitude, loc.latitude)
+        )
   }
 
   /** deserialize a Location from a BSON */
   implicit object LocationBSONReader extends BSONDocumentReader[Location] {
-    def read(doc: BSONDocument): Location =
+    def read(doc: BSONDocument): Location = {
+      val coordinates = doc.getAs[List[Double]]("coordinates").get
       Location(
-        doc.getAs[Double]("lon").get,
-        doc.getAs[Double]("lat").get)
+        coordinates(0),
+        coordinates(1)
+      )
+    }
   }
 }

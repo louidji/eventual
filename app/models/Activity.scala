@@ -1,5 +1,6 @@
 package models
 
+import models.Activity.ActivityBSONReader
 import play.api.libs.json.Json
 import reactivemongo.bson._
 // necessaire (implict ... Json.format)
@@ -12,10 +13,9 @@ import play.modules.reactivemongo.json.BSONFormats.BSONObjectIDFormat
  */
 case class Activity(id: Option[BSONObjectID], name: String, activity: String, adress: Option[String], zipcode: Option[String],
                     city: Option[String], country: Option[String], latitude: Double, longitude: Double)
-
 object Activity {
-  implicit val activityFormat = Json.format[Activity]
 
+  implicit val activityFormat = Json.format[Activity]
 
   implicit object ActivityBSONWriter extends BSONDocumentWriter[Activity] {
     def write(activity: Activity): BSONDocument =

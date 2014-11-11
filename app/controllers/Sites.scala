@@ -35,7 +35,7 @@ object Sites extends Controller {
    * @return
    */
   def show(id: String) = Action.async(parse.empty) { request =>
-    SitesDAO.show(id).map { site => Ok(Json.toJson(site))}
+    SitesDAO.findById(id).map { site => Ok(Json.toJson(site))}
   }
 
 }
