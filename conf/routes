@@ -17,7 +17,7 @@ DELETE  /api/celebrities/:id		controllers.Celebrities.delete(id: String)
 GET     /api/celebrities/find/:name		controllers.Celebrities.find(name: String)
 
 
-#GET     /api/activities            controllers.Activities.all
+GET     /api/activities            controllers.Activities.all
 GET     /api/activities/find/:name		controllers.Activities.find(name: String)
 GET     /api/activities/:id		controllers.Activities.show(id: String)
 
