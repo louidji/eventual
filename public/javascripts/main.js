@@ -1,25 +1,25 @@
 /*
  * Author: Sari Haj Hussein
  */
-var app = angular.module("app", ["ngResource"])
-	.constant("apiUrl", "http://localhost:9000\:9000/api") // to tell AngularJS that 9000 is not a dynamic parameter
+var app = angular.module("app", ["ngResource", "ngRoute"])
+	.constant("apiUrl", "http://localhost:9000/api")
 	.config(["$routeProvider", function($routeProvider) {
 		return $routeProvider.when("/", {
 			templateUrl: "/assets/html/main.html",
 			controller: "ListCtrl"
-		}).when("/result", {
+		}).when("/celebrity/result", {
                 templateUrl: "/assets/html/main.html",
                 controller: "ListResult"
-        }).when("/create", {
+        }).when("/celebrity/create", {
 			templateUrl: "/assets/html/detail.html",
 			controller: "CreateCtrl"
-	    }).when("/search", {
+	    }).when("/celebrity/search", {
             templateUrl: "/assets/html/search.html",
             controller: "SearchCtrl"
-         }).when("/edit/:id", {
+         }).when("/celebrity/edit/:id", {
 			templateUrl: "/assets/html/detail.html",
 			controller: "EditCtrl"
-	    }).otherwise({
+		}).otherwise({
 			redirectTo: "/"
 		});
 	}
@@ -76,7 +76,7 @@ app.controller("SearchCtrl",  ["CelebritiesService", "$scope", "$resource", "$ti
 
         CelebritiesService.celebrities  = Celebrities.query(); // for the list of celebrities in public/html/main.html
 
-        $timeout(function() { $scope.go('/result'); });
+        $timeout(function() { $scope.go('/celebrity/result'); });
 	};
 }]);
 

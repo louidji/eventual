@@ -29,5 +29,6 @@ GET     /api/sites/:id		controllers.Sites.show(id: String)
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
+
 # Redirect all unknown routes to the index page
 # GET     /*any						controllers.Application.index(any)
