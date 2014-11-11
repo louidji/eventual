@@ -1,9 +1,10 @@
 package services
 
 
-import models.Celebrity
+
 import play.api.Play.current
 import play.modules.reactivemongo.ReactiveMongoPlugin
+import reactivemongo.api.{QueryOpts, Cursor}
 import reactivemongo.api.collections.default.BSONCollection
 import reactivemongo.bson._
 import reactivemongo.core.commands.LastError
@@ -22,7 +23,7 @@ abstract class DataAccess[T] {
   val pattern = "\\w+".r
 
   /**
-   * Verifie que la chaine de texte ne contient pas un caractere "interdit"
+   * check they are no escape key on the param
    * @param param
    */
   def conform(param: String): Boolean = {
@@ -30,6 +31,48 @@ abstract class DataAccess[T] {
       case s: Some[String] => s.get.equals(param)
       case _ => false
     }
+  }
+
+
+  /**
+   * list all documents without sort
+   * @return collection of activities
+   */
+  def all(implicit t: BSONDocumentReader[T]): Future[List[T]] = {
+
+    // let's do our query
+    val cursor: Cursor[T] = collection.
+      // find all
+      find(BSONDocument()).
+      // perform the query and get a cursor of JsObject
+      cursor[T]
+
+    cursor.collect[List]()
+  }
+
+  /**
+   * list documents in the range [skip, skip + size] (for tabulation)
+   * @param sortKey the name of the key (for asc ordering)
+   * @param skip the number of document to skip
+   * @param size the size of the windows doc
+   *
+   * @return
+   */
+  def range(sortKey: String, skip:Int, size: Int)(implicit t: BSONDocumentReader[T]): Future[List[T]] = {
+
+    // let's do our query
+    val cursor: Cursor[T] = collection.
+      // find all
+      find(BSONDocument()).
+      // limit & skip
+      options(QueryOpts().skip(skip).batchSize(size).exhaust).
+      // sort (indexed key is very more efficient)
+      sort(BSONDocument(sortKey -> 1)).
+      // perform the query and get a cursor of JsObject
+      cursor[T]
+
+    cursor.collect[List]()
+
   }
 
   /** retrieve the document for the given id */

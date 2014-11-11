@@ -21,6 +21,15 @@ object Sites extends Controller {
   }
 
   /**
+   * Find an sites (with paging)
+   * @param sortKey key use for asc sort
+   * @return collection of activities
+   */
+  def range(sortKey: String, skip: Int, size: Int) = Action.async(parse.empty) { request =>
+    SitesDAO.range(sortKey, skip, size).map { sites => Ok(Json.toJson(sites))} // convert it to a JSON and return it
+  }
+
+  /**
    * Find a site by name like 'name%' ignoring case
    * @param name beginning of the name (non sensitive case)
    * @return collection of sites

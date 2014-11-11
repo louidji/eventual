@@ -27,8 +27,15 @@ object Activities extends Controller {
    */
   def find(name: String) = Action.async(parse.empty) { request =>
     ActivitiesDAO.find(name).map { activities => Ok(Json.toJson(activities))} // convert it to a JSON and return it
+  }
 
-
+  /**
+   * Find an activities (with paging)
+   * @param sortKey key use for asc sort
+   * @return collection of activities
+   */
+  def range(sortKey: String, skip: Int, size: Int) = Action.async(parse.empty) { request =>
+    ActivitiesDAO.range(sortKey, skip, size).map { activities => Ok(Json.toJson(activities))} // convert it to a JSON and return it
   }
 
   /**

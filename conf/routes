@@ -17,14 +17,17 @@ DELETE  /api/celebrities/:id		controllers.Celebrities.delete(id: String)
 GET     /api/celebrities/find/:name		controllers.Celebrities.find(name: String)
 
 
+GET     /api/activities/:id		controllers.Activities.show(id: String)
 GET     /api/activities            controllers.Activities.all
 GET     /api/activities/find/:name		controllers.Activities.find(name: String)
-GET     /api/activities/:id		controllers.Activities.show(id: String)
+GET     /api/activities/range/:sortKey		controllers.Activities.range(sortKey: String, skip: Int, size: Int)
+# http://localhost:9000/api/activities/range/name?skip=300&size=100
 
+
+GET     /api/sites/:id		controllers.Sites.show(id: String)
 GET     /api/sites            controllers.Sites.all
 GET     /api/sites/find/:name		controllers.Sites.find(name: String)
-GET     /api/sites/:id		controllers.Sites.show(id: String)
-
+GET     /api/sites/range/:sortKey		controllers.Sites.range(sortKey: String, skip: Int, size: Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

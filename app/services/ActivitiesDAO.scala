@@ -3,7 +3,7 @@ package services
 import models.Activity
 import play.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import reactivemongo.api.Cursor
+import reactivemongo.api.{QueryOpts, Cursor}
 import reactivemongo.bson.{BSONDocument, BSONRegex}
 
 import scala.concurrent.Future
@@ -17,23 +17,9 @@ object ActivitiesDAO extends DataAccess[Activity] {
   val collectionName = "activities"
 
 
-  /**
-   * list all activities
-   * @return collection of activities
-   */
-  def all: Future[List[Activity]] = {
 
-    // let's do our query
-    val cursor: Cursor[Activity] = collection.
-      // find all
-      find(BSONDocument()).
-      // sort by name
-      sort(BSONDocument("name" -> 1)).
-      // perform the query and get a cursor of JsObject
-      cursor[Activity]
 
-    cursor.collect[List]()
-  }
+
 
   /**
    * Find an activity by name like 'name%' ignoring case

@@ -17,24 +17,6 @@ object SitesDAO extends DataAccess[Site] {
   val collectionName = "sites"
 
   /**
-   * list all sites
-   * @return collection of activities
-   */
-  def all: Future[List[Site]] = {
-
-    // let's do our query
-    val cursor: Cursor[Site] = collection.
-      // find all
-      find(BSONDocument()).
-      // sort by name
-      sort(BSONDocument("name" -> 1)).
-      // perform the query and get a cursor of JsObject
-      cursor[Site]
-
-    cursor.collect[List]()
-  }
-
-  /**
    * Find a site by name like 'name%' ignoring case
    * @param name beginning of the name (non sensitive case)
    * @return collection of activities

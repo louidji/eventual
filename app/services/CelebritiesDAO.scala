@@ -14,11 +14,7 @@ import scala.concurrent.Future
 object CelebritiesDAO extends DataAccess[Celebrity] {
   val collectionName = "celebrities"
 
-  /** list all celebrities */
-  def all: Future[List[Celebrity]] = {
-    val cursor = collection.find(BSONDocument()).cursor[Celebrity] // get all the fields of all the celebrities
-    cursor.collect[List]() // convert it to a list of Celebrity
-  }
+
 
 
   def find(name: String): Future[List[Celebrity]] = {
