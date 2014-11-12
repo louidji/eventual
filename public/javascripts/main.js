@@ -96,8 +96,9 @@ app.controller("EditCtrl", ["$scope", "$resource", "$routeParams", "$timeout", "
 	if ($routeParams.id) {
 		// retrieve the corresponding celebrity from the database
 		// $scope.celebrity.id.$oid is now populated so the Delete button will appear in the detailForm in public/html/detail.html
-		$scope.celebrity = ShowCelebrity.get({id: $routeParams.id});
-		$scope.dbContent = ShowCelebrity.get({id: $routeParams.id}); // this is used in the noChange function
+		$scope.celebrity = ShowCelebrity.get({id: $routeParams.id}, function() {
+          $scope.dbContent = angular.copy($scope.celebrity);
+        });
 	}
 	
 	// decide whether to enable or not the button Save in the detailForm in public/html/detail.html 
