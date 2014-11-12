@@ -9,8 +9,8 @@
         </thead>
         <tbody>
         <tr ng-repeat="celebrity in celebrities | orderBy:['name.first','name.last']">
-            <td class="pad">{{celebrity.name.first}} {{celebrity.name.last}}</td>
-            <td class="pad"><a href="{{celebrity.website}}" target="_blank">{{celebrity.website}}</a></td>
+            <td class="pad">{{ ::celebrity.name.first}} {{ ::celebrity.name.last}}</td>
+            <td class="pad"><a href="{{celebrity.website}}" target="_blank">{{ ::celebrity.website}}</a></td>
             <td><a href="/celebrity/edit/{{celebrity.id.$oid}}"><i class="glyphicon glyphicon-pencil"></i></a></td>
         </tr>
         </tbody>
