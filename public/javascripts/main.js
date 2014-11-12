@@ -1,6 +1,5 @@
-/*
- * Author: Sari Haj Hussein
- */
+'use strict';
+
 var app = angular.module("app", ["ngResource", "ngRoute"])
 	.constant("apiUrl", "http://localhost\\:9000/api")
 	.config(["$routeProvider", function($routeProvider) {
