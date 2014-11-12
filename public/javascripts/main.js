@@ -84,8 +84,10 @@ app.controller("CreateCtrl", ["$scope", "$resource", "$timeout", "apiUrl", funct
 	// to save a celebrity
 	$scope.save = function() {
 		var CreateCelebrity = $resource(apiUrl + "/celebrities/new"); // a RESTful-capable resource object
-		CreateCelebrity.save($scope.celebrity); // $scope.celebrity comes from the detailForm in public/html/detail.html
-		$timeout(function() { $scope.go('/'); }); // go back to public/html/main.html
+		CreateCelebrity.save($scope.celebrity, function() {
+			$timeout(function() { $scope.go('/'); }); // go back to public/html/main.html
+		}); // $scope.celebrity comes from the detailForm in public/html/detail.html
+
 	};
 }]);
 
@@ -108,15 +110,19 @@ app.controller("EditCtrl", ["$scope", "$resource", "$routeParams", "$timeout", "
 	// to update a celebrity
 	$scope.save = function() {
 		var UpdateCelebrity = $resource(apiUrl + "/celebrities/" + $routeParams.id); // a RESTful-capable resource object
-		UpdateCelebrity.save($scope.celebrity); // $scope.celebrity comes from the detailForm in public/html/detail.html
-		$timeout(function() { $scope.go('/'); }); // go back to public/html/main.html
+		UpdateCelebrity.save($scope.celebrity, function() {
+			$timeout(function() { $scope.go('/'); }); // go back to public/html/main.html
+		}); // $scope.celebrity comes from the detailForm in public/html/detail.html
+
 	};
 	
 	// to delete a celebrity
 	$scope.delete = function() {
 		var DeleteCelebrity = $resource(apiUrl + "/celebrities/" + $routeParams.id); // a RESTful-capable resource object
-		DeleteCelebrity.delete(); // $scope.celebrity comes from the detailForm in public/html/detail.html
-		$timeout(function() { $scope.go('/'); }); // go back to public/html/main.html
+		DeleteCelebrity.delete(function() {
+				$timeout(function() { $scope.go('/'); }); // go back to public/html/main.html
+		}); // $scope.celebrity comes from the detailForm in public/html/detail.html
+
 	};
 }]);
 
