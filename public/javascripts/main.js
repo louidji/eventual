@@ -6,16 +6,16 @@ var app = angular.module("app", ["ngResource", "ngRoute", "celebrity"])
 		return $routeProvider.when("/", {
 			templateUrl: "/assets/html/main.html",
 			controller: "ListCtrl"
-		}).when("/celebrity/result", {
+		}).when("/web/celebrity/result", {
                 templateUrl: "/assets/html/main.html",
                 controller: "ListResult"
-        }).when("/celebrity/create", {
+        }).when("/web/celebrity/create", {
 			templateUrl: "/assets/html/detail.html",
 			controller: "CreateCtrl"
-	    }).when("/celebrity/search", {
+	    }).when("/web/celebrity/search", {
             templateUrl: "/assets/html/search.html",
             controller: "SearchCtrl"
-         }).when("/celebrity/edit/:id", {
+         }).when("/web/celebrity/edit/:id", {
 			templateUrl: "/assets/html/detail.html",
 			controller: "EditCtrl"
 		}).otherwise({

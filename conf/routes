@@ -35,4 +35,4 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 
 # Redirect all unknown routes to the index page
-GET     /*any						controllers.Application.index(any)
+GET     /web/*any						controllers.Application.index(any)
