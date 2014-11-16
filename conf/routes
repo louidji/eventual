@@ -27,6 +27,7 @@ GET     /api/activities/range/:sortKey		controllers.Activities.range(sortKey: St
 GET     /api/sites/:id		controllers.Sites.show(id: String)
 GET     /api/sites            controllers.Sites.all
 GET     /api/sites/find/:name		controllers.Sites.find(name: String)
+GET     /api/sites/near/:max		controllers.Sites.near(lon: Double, lat: Double, max: Int)
 GET     /api/sites/range/:sortKey		controllers.Sites.range(sortKey: String, skip: Int, size: Int)
 
 # Map static resources from the /public folder to the /assets URL path

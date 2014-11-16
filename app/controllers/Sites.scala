@@ -1,5 +1,6 @@
 package controllers
 
+import models.Location
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import play.api.mvc._
@@ -36,6 +37,17 @@ object Sites extends Controller {
    */
   def find(name: String) = Action.async(parse.empty) { request =>
     SitesDAO.find(name).map { sites => Ok(Json.toJson(sites))} // convert it to a JSON and return it
+  }
+
+  /**
+   * Find nearest sites
+   * @param longitude
+   * @param latitude
+   * @param max distance max
+   * @return
+   */
+  def near(longitude: Double, latitude: Double, max: Int) = Action.async(parse.empty) { request =>
+    SitesDAO.findNear(Location(longitude, latitude), max).map { sites => Ok(Json.toJson(sites))} // convert it to a JSON and return it
   }
 
   /**
