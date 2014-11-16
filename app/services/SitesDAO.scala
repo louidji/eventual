@@ -22,7 +22,7 @@ object SitesDAO extends DataAccess[Site] {
    * @return collection of activities
    */
   def find(name: String): Future[List[Site]] = {
-    if (conform(name)) {
+    if (isWord(name)) {
       val query =
         BSONDocument("name" -> BSONRegex("^" + name + ".*", "i"))
       val cursor: Cursor[Site] = collection.find(query).

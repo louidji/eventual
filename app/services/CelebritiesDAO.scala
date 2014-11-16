@@ -18,7 +18,7 @@ object CelebritiesDAO extends DataAccess[Celebrity] {
 
 
   def find(name: String): Future[List[Celebrity]] = {
-    if (conform(name)) {
+    if (isWord(name)) {
       val query = BSONDocument("name.last" -> BSONRegex("^" + name + ".*", "i"))
       val cursor = collection.find(query).sort(BSONDocument("name" -> 1)).cursor[Celebrity] // get all the fields of all the celebrities
       cursor.collect[List]() // convert it to a list of Celebrity

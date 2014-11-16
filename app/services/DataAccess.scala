@@ -20,14 +20,26 @@ abstract class DataAccess[T] {
 
   val collectionName: String
   lazy val collection: BSONCollection = ReactiveMongoPlugin.db.collection[BSONCollection](collectionName)
-  val pattern = "\\w+".r
+  val patternWordCar = "\\w+".r
+  val patternDigitCar = "\\d+".r
 
   /**
    * check they are no escape key on the param
    * @param param
    */
-  def conform(param: String): Boolean = {
-    pattern.findFirstIn(param) match {
+  def isWord(param: String): Boolean = {
+    patternWordCar.findFirstIn(param) match {
+      case s: Some[String] => s.get.equals(param)
+      case _ => false
+    }
+  }
+
+  /**
+   * check they are no escape key on the param
+   * @param param
+   */
+  def isNumber(param: String): Boolean = {
+    patternWordCar.findFirstIn(param) match {
       case s: Some[String] => s.get.equals(param)
       case _ => false
     }
@@ -59,19 +71,21 @@ abstract class DataAccess[T] {
    * @return
    */
   def range(sortKey: String, skip:Int, size: Int)(implicit t: BSONDocumentReader[T]): Future[List[T]] = {
+    if (isWord(sortKey) && skip >=0 && size > 0) {
 
-    // let's do our query
-    val cursor: Cursor[T] = collection.
-      // find all
-      find(BSONDocument()).
-      // limit & skip
-      options(QueryOpts().skip(skip).batchSize(size).exhaust).
-      // sort (indexed key is very more efficient)
-      sort(BSONDocument(sortKey -> 1)).
-      // perform the query and get a cursor of JsObject
-      cursor[T]
+      // let's do our query
+      val cursor: Cursor[T] = collection.
+        // find all
+        find(BSONDocument()).
+        // limit & skip
+        options(QueryOpts().skip(skip).batchSize(size).exhaust).
+        // sort (indexed key is very more efficient)
+        sort(BSONDocument(sortKey -> 1)).
+        // perform the query and get a cursor of JsObject
+        cursor[T]
 
-    cursor.collect[List]()
+      cursor.collect[List]()
+    } else Future(Nil)
 
   }
 

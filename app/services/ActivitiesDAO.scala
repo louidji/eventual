@@ -28,7 +28,7 @@ object ActivitiesDAO extends DataAccess[Activity] {
    */
   def find(name: String): Future[List[Activity]] = {
 
-    if (conform(name)) {
+    if (isWord(name)) {
       val query =
         BSONDocument("name" -> BSONRegex("^" + name + ".*", "i"))
       val cursor: Cursor[Activity] = collection.find(query).
