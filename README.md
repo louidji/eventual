@@ -16,8 +16,4 @@ Test de play avec Mongo & Angular
 5. jQuery 2.1.1 (used by 4)
 
 ## TODO ##
-- search géospatial
-- revoir les urls avec le routing
-- corriger l'affichage de la page d'accueil sur retour de création => asynchrone on peut avoir le resultat qui passe avant la création (manque des lignes...)
-- corriger le double appels de l'objet sur l'édition
 - ajouter un affichage de carte pour la recherche géospatial
