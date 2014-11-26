@@ -91,7 +91,7 @@ abstract class DataAccess[T] {
 
   /** retrieve the document for the given id */
   def findById(id: String)(implicit t: BSONDocumentReader[T]): Future[Option[T]] = {
-    val objectID = new BSONObjectID(id) // get the corresponding BSONObjectID
+    val objectID = BSONObjectID(id) // get the corresponding BSONObjectID
     collection.find(BSONDocument("_id" -> objectID)).one[T]
 
   }
@@ -103,7 +103,7 @@ abstract class DataAccess[T] {
 
   /** delete a document for the given id */
   def delete(id: String): Future[LastError] = {
-    val objectID = new BSONObjectID(id) // get the corresponding BSONObjectID
+    val objectID = BSONObjectID(id) // get the corresponding BSONObjectID
     collection.remove(BSONDocument("_id" -> objectID))
   }
 

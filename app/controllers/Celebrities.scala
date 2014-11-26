@@ -53,7 +53,7 @@ object Celebrities extends Controller {
   /** update the celebrity for the given id from the JSON body */
   def update(id: String) = Action.async(parse.json) { request =>
 
-    val objectID = new BSONObjectID(id) // get the corresponding BSONObjectID
+    val objectID = BSONObjectID(id) // get the corresponding BSONObjectID
     val nameJSON = request.body.\("name")
     val name = nameFormat.reads(nameJSON).get
     val website = request.body.\("website").toString().replace("\"", "")
