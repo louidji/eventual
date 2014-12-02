@@ -1,6 +1,3 @@
-/*
- * Quelgues adresses de test sur les villes
- */
 
 use eventual
 
@@ -18,14 +15,6 @@ db.activities.find({zipcode : {$exists : true}}).forEach(
 
 
 
-/*
-db.activities.find({"latitude":{$type:16}}).forEach(
-  function(x) {
-   x.latitude = parseFloat(parseInt(x.latitude) + ".0");
-   db.activities.save(x);
-   }
-);
-*/
 
 
 db.activities.ensureIndex( { name:1 } )

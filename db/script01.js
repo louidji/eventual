@@ -1,7 +1,3 @@
-/*
- * Author: Sari Haj Hussein
- */
-
 use eventual
 
 db.dropDatabase()
