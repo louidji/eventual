@@ -1,7 +1,7 @@
 'use strict';
 
 var app = angular.module("app", ["ngResource", "ngRoute", "celebrity"])
-	.constant("apiUrl", "http://localhost\\:9000/api")
+	.constant("apiUrl", "./api")
 	.config(["$routeProvider", function($routeProvider) {
 		return $routeProvider.when("/", {
 			templateUrl: "/assets/html/main.html",
